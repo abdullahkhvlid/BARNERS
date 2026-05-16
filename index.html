@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="BARNERS — Premium fashion at Panora AVM Ankara. Exclusive suits, coats & accessories from Paoloni, Zegna, Canali and more."/>
+<title>BARNERS — Premium Fashion · Panora AVM Ankara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* ─── RESET & TOKENS ─────────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#060503;
+  --bg:#060503;
+  --white:#f4f0e8;
+  --cream:#ede9df;
+  --gold:#c9a84c;--gold2:#e8d48b;--gold-dim:rgba(201,168,76,0.12);
+  --surface:#0d0b07;
+  --mid:#0a0806;
+  --border:rgba(201,168,76,0.12);
+  --text-muted:rgba(244,240,232,0.4);
+  --text-mid:rgba(244,240,232,0.65);
+  --ease:cubic-bezier(0.23,1,0.32,1);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:#060503;color:var(--white);font-family:'Montserrat',sans-serif;font-weight:300;overflow-x:hidden;cursor:none;-webkit-font-smoothing:antialiased}
+
+/* ─── CURSOR ─────────────────────────────────────────────── */
+#cur{width:8px;height:8px;background:var(--gold);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.2s var(--ease),opacity 0.2s}
+#cur-ring{width:36px;height:36px;border:1px solid rgba(201,168,76,0.5);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width 0.3s var(--ease),height 0.3s var(--ease),border-color 0.3s,left 0.1s linear,top 0.1s linear}
+body.hovering #cur{transform:translate(-50%,-50%) scale(0.3);opacity:0.5}
+body.hovering #cur-ring{width:56px;height:56px;border-color:var(--gold)}
+
+/* ─── PRELOADER ──────────────────────────────────────────── */
+#preloader{position:fixed;inset:0;background:#070604;z-index:3000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;transition:opacity 1s var(--ease),visibility 1s}
+#preloader.out{opacity:0;visibility:hidden;pointer-events:none}
+.pre-wordmark{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;letter-spacing:0.7em;padding-left:0.7em;color:var(--white)}
+.pre-line{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:preLine 2s var(--ease) forwards}
+@keyframes preLine{to{width:220px}}
+.pre-sub{font-size:0.5rem;letter-spacing:0.6em;text-transform:uppercase;color:rgba(201,168,76,0.5);padding-left:0.6em}
+
+/* ─── PROGRESS ───────────────────────────────────────────── */
+#prog{position:fixed;top:0;left:0;height:1px;background:linear-gradient(90deg,var(--gold),var(--gold2));z-index:1000;width:0;transition:width 0.08s linear}
+
+/* ─── NAV ────────────────────────────────────────────────── */
+nav{position:fixed;inset:0 0 auto 0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:1.6rem 6rem;transition:padding 0.5s var(--ease),background 0.5s}
+nav.scrolled{background:rgba(7,6,4,0.92);backdrop-filter:blur(24px);padding:1.2rem 6rem;border-bottom:0.5px solid var(--border)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;letter-spacing:0.55em;padding-left:0.55em;color:var(--white);text-decoration:none;flex-shrink:0}
+.nav-center{display:flex;gap:3.5rem;list-style:none}
+.nav-center a{color:var(--text-muted);text-decoration:none;font-size:0.58rem;letter-spacing:0.25em;text-transform:uppercase;transition:color 0.3s;position:relative}
+.nav-center a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.3s var(--ease)}
+.nav-center a:hover{color:var(--white)}
+.nav-center a:hover::after{width:100%}
+.nav-r{display:flex;align-items:center;gap:1.8rem}
+.nav-wa{padding:0.55rem 1.4rem;border:0.5px solid var(--gold);color:var(--gold);text-decoration:none;font-size:0.55rem;letter-spacing:0.25em;text-transform:uppercase;transition:all 0.3s}
+.nav-wa:hover{background:var(--gold);color:#070604}
+.cart-ico{background:none;border:none;cursor:none;color:var(--white);position:relative;display:flex;align-items:center;padding:0.2rem;transition:color 0.3s}
+.cart-ico:hover{color:var(--gold)}
+.cart-badge{position:absolute;top:-5px;right:-5px;width:16px;height:16px;background:var(--gold);color:#070604;border-radius:50%;font-size:0.45rem;font-weight:600;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all 0.3s var(--ease)}
+.cart-badge.on{opacity:1;transform:scale(1)}
+.hbg{display:none;flex-direction:column;gap:6px;background:none;border:none;cursor:none;padding:0.2rem}
+.hbg span{display:block;width:20px;height:1px;background:var(--white);transition:all 0.4s var(--ease)}
+
+/* ─── MOBILE OVERLAY MENU ────────────────────────────────── */
+.mob-menu{position:fixed;inset:0;background:#070604;z-index:490;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3rem;transform:translateY(-100%);transition:transform 0.7s var(--ease)}
+.mob-menu.on{transform:none}
+.mob-menu a{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;color:var(--white);text-decoration:none;letter-spacing:0.05em;transition:color 0.3s}
+.mob-menu a:hover{color:var(--gold)}
+
+/* ─── CART SIDEBAR ───────────────────────────────────────── */
+.cart-veil{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:599;opacity:0;pointer-events:none;transition:opacity 0.5s}
+.cart-veil.on{opacity:1;pointer-events:all}
+#cart{position:fixed;right:0;top:0;bottom:0;width:400px;background:#0c0a06;border-left:0.5px solid var(--border);z-index:600;transform:translateX(100%);transition:transform 0.55s var(--ease);display:flex;flex-direction:column}
+#cart.on{transform:none}
+.cart-hd{padding:2rem 2rem 1.5rem;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.cart-hd h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem;letter-spacing:0.06em;font-weight:400}
+.cart-x{background:none;border:none;cursor:none;color:var(--text-muted);font-size:1.1rem;line-height:1;transition:color 0.2s}
+.cart-x:hover{color:var(--white)}
+.cart-body{flex:1;overflow-y:auto;padding:1.5rem 2rem}
+.cart-body::-webkit-scrollbar{width:1px}
+.cart-body::-webkit-scrollbar-thumb{background:var(--gold-dim)}
+.cart-empty-msg{text-align:center;padding:4rem 0;color:var(--text-muted);font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase}
+.c-item{display:flex;gap:1rem;padding-bottom:1.5rem;margin-bottom:1.5rem;border-bottom:0.5px solid rgba(201,168,76,0.07)}
+.c-item-img{width:65px;height:85px;object-fit:cover;object-position:top;flex-shrink:0;background:var(--surface)}
+.c-info{flex:1;display:flex;flex-direction:column;gap:0.25rem}
+.c-name{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:400}
+.c-sub{font-size:0.56rem;color:var(--gold);letter-spacing:0.2em;text-transform:uppercase}
+.c-size{font-size:0.58rem;color:var(--text-muted)}
+.c-row{display:flex;justify-content:space-between;align-items:center;margin-top:0.5rem}
+.qty{display:flex;align-items:center;gap:0.7rem}
+.q-btn{background:none;border:0.5px solid rgba(201,168,76,0.2);color:var(--white);width:22px;height:22px;cursor:none;font-size:0.85rem;transition:all 0.2s;display:flex;align-items:center;justify-content:center;line-height:1}
+.q-btn:hover{border-color:var(--gold);color:var(--gold)}
+.q-n{font-size:0.72rem;min-width:14px;text-align:center}
+.c-price{font-size:0.82rem;color:var(--gold)}
+.c-rm{background:none;border:none;color:var(--text-muted);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;cursor:none;margin-top:0.4rem;transition:color 0.2s}
+.c-rm:hover{color:rgba(244,240,232,0.6)}
+.cart-ft{padding:1.5rem 2rem 2rem;border-top:0.5px solid var(--border);flex-shrink:0}
+.cart-tot{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1.5rem}
+.cart-tot span:first-child{font-size:0.56rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--text-muted)}
+.cart-tot span:last-child{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--gold)}
+.wa-order{width:100%;padding:1rem;background:var(--gold);color:#070604;border:none;font-size:0.6rem;letter-spacing:0.28em;text-transform:uppercase;font-weight:500;cursor:none;transition:background 0.3s;display:flex;align-items:center;justify-content:center;gap:0.7rem}
+.wa-order:hover{background:var(--gold2)}
+
+/* ─── QUICK VIEW ─────────────────────────────────────────── */
+#qv{position:fixed;inset:0;z-index:700;display:flex;align-items:center;justify-content:center;padding:1.5rem;opacity:0;pointer-events:none;transition:opacity 0.4s}
+#qv.on{opacity:1;pointer-events:all}
+.qv-bg{position:absolute;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px)}
+.qv-box{position:relative;background:#0c0a06;border:0.5px solid var(--border);max-width:860px;width:100%;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;max-height:90vh}
+.qv-img{position:relative;overflow:hidden}
+.qv-img img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.qv-bdg{position:absolute;top:1rem;left:1rem;padding:0.3rem 0.75rem;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:500}
+.bdg-ex{background:var(--gold);color:#070604}
+.bdg-nw{background:var(--white);color:#070604}
+.bdg-sl{background:#b03030;color:#fff}
+.qv-panel{padding:3rem 2.5rem;overflow-y:auto;display:flex;flex-direction:column;gap:1rem}
+.qv-panel::-webkit-scrollbar{width:1px}
+.qv-panel::-webkit-scrollbar-thumb{background:var(--gold-dim)}
+.qv-cls{position:absolute;top:1rem;right:1rem;background:rgba(7,6,4,0.8);border:none;color:var(--text-muted);width:34px;height:34px;cursor:none;display:flex;align-items:center;justify-content:center;z-index:2;transition:color 0.2s;font-size:1rem}
+.qv-cls:hover{color:var(--white)}
+.qv-brand{font-size:0.52rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold)}
+.qv-name{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:400;line-height:1.05;margin-top:0.2rem}
+.qv-subtitle{font-size:0.62rem;color:var(--text-muted);letter-spacing:0.08em}
+.qv-price-row{display:flex;align-items:baseline;gap:0.8rem}
+.qv-price{font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:var(--gold)}
+.qv-orig{font-size:0.75rem;color:rgba(244,240,232,0.25);text-decoration:line-through}
+.qv-sep{width:30px;height:1px;background:var(--gold);opacity:0.4}
+.qv-desc{font-size:0.73rem;line-height:2.1;color:var(--text-mid)}
+.size-hd{font-size:0.52rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.7rem}
+.sizes{display:flex;flex-wrap:wrap;gap:0.5rem}
+.sz{padding:0.45rem 0.85rem;border:0.5px solid rgba(201,168,76,0.2);background:none;color:var(--white);font-size:0.6rem;letter-spacing:0.08em;cursor:none;transition:all 0.25s;font-family:'Montserrat',sans-serif}
+.sz:hover,.sz.on{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.06)}
+.qv-acts{display:flex;gap:0.7rem;margin-top:auto}
+.qv-add{flex:1;padding:0.95rem;background:var(--gold);color:#070604;border:none;font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;font-weight:500;cursor:none;transition:background 0.3s}
+.qv-add:hover{background:var(--gold2)}
+.qv-wish{width:46px;height:46px;border:0.5px solid rgba(201,168,76,0.25);background:none;cursor:none;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color 0.3s}
+.qv-wish:hover{border-color:var(--gold)}
+
+/* ─── TOAST ──────────────────────────────────────────────── */
+#toasts{position:fixed;top:2rem;right:2rem;z-index:900;display:flex;flex-direction:column;gap:0.5rem;pointer-events:none}
+.toast{background:#121009;border:0.5px solid rgba(201,168,76,0.3);padding:0.9rem 1.3rem;display:flex;align-items:center;gap:0.8rem;font-size:0.67rem;letter-spacing:0.04em;animation:tIn 0.4s var(--ease)}
+.t-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;flex-shrink:0}
+.toast.out{animation:tOut 0.35s var(--ease) forwards}
+@keyframes tIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+@keyframes tOut{to{opacity:0;transform:translateX(16px)}}
+
+/* ─── HERO ───────────────────────────────────────────────── */
+#hero{position:relative;width:100%;height:100vh;overflow:hidden;display:flex;align-items:center}
+#hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:0.18;filter:grayscale(25%) contrast(1.1)}
+#three-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-wrap{position:relative;z-index:10;padding:0 6rem;max-width:900px}
+.hero-eyebrow{font-size:0.55rem;letter-spacing:0.55em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:0;animation:fU 1s 0.4s both}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-weight:300;line-height:0.85;letter-spacing:-0.02em;opacity:0;animation:fU 1.1s 0.6s both}
+.hero-h1 .line1{display:block;font-size:clamp(5rem,13vw,11rem)}
+.hero-h1 .line2{display:block;font-size:clamp(5rem,13vw,11rem);font-style:italic;color:var(--gold)}
+.hero-rule{width:60px;height:1px;background:var(--gold);margin:2.5rem 0;opacity:0;animation:fU 1s 0.9s both}
+.hero-sub{font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--text-muted);opacity:0;animation:fU 1s 1s both;max-width:420px;line-height:2}
+.hero-btns{margin-top:3rem;display:flex;gap:1.2rem;opacity:0;animation:fU 1s 1.2s both}
+.btn-g{padding:1rem 2.8rem;background:var(--gold);color:#070604;text-decoration:none;font-size:0.6rem;letter-spacing:0.28em;text-transform:uppercase;font-weight:500;transition:all 0.3s;display:inline-block;border:none;cursor:none}
+.btn-g:hover{background:var(--gold2);transform:translateY(-2px)}
+.btn-o{padding:1rem 2.8rem;border:0.5px solid rgba(244,240,232,0.3);color:var(--white);text-decoration:none;font-size:0.6rem;letter-spacing:0.28em;text-transform:uppercase;transition:all 0.3s;display:inline-block}
+.btn-o:hover{border-color:var(--gold);color:var(--gold)}
+.hero-scroll{position:absolute;bottom:3rem;right:6rem;z-index:10;display:flex;flex-direction:column;align-items:center;gap:0.6rem;opacity:0;animation:fU 1s 1.5s both}
+.scroll-lbl{font-size:0.48rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--text-muted);writing-mode:vertical-lr}
+.scroll-tick{width:1px;height:60px;background:linear-gradient(var(--gold),transparent);animation:scTick 2s infinite}
+@keyframes scTick{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes fU{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+/* ─── TICKER ──────────────────────────────────────────────── */
+.ticker{background:var(--gold);padding:0.75rem 0;overflow:hidden}
+.ticker-t{display:flex;width:max-content;animation:tick 28s linear infinite}
+.ticker-i{font-size:0.55rem;letter-spacing:0.35em;text-transform:uppercase;color:#070604;font-weight:500;padding:0 2.5rem;white-space:nowrap}
+.ticker-s{color:rgba(0,0,0,0.35)}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ─── SECTION COMMONS ────────────────────────────────────── */
+.sec{padding:11rem 6rem}
+.sec-sm{padding:7rem 6rem}
+.sh{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6rem}
+.sl{font-size:0.52rem;letter-spacing:0.5em;text-transform:uppercase;color:var(--gold);margin-bottom:0.9rem}
+.st{font-family:'Cormorant Garamond',serif;font-size:clamp(3.2rem,5.5vw,5.5rem);font-weight:300;line-height:0.95}
+.st em{font-style:italic;color:var(--gold)}
+.see{font-size:0.56rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-muted);text-decoration:none;display:flex;align-items:center;gap:0.6rem;transition:color 0.3s;white-space:nowrap}
+.see::after{content:'';width:28px;height:1px;background:currentColor;transition:width 0.3s var(--ease)}
+.see:hover{color:var(--gold)}
+.see:hover::after{width:48px}
+.reveal{opacity:0;transform:translateY(36px);transition:opacity 0.95s var(--ease),transform 0.95s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+
+/* ─── COLLECTIONS GRID ───────────────────────────────────── */
+.coll-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr;grid-template-rows:auto auto;gap:1.2rem}
+.coll-card{position:relative;overflow:hidden;cursor:pointer;transition:transform 0.6s var(--ease)}
+.coll-card:hover{transform:translateY(-5px)}
+.coll-card.big{grid-row:span 2}
+.coll-img{width:100%;overflow:hidden}
+.coll-card.big .coll-img{height:100%}
+.coll-img img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;aspect-ratio:3/4;transition:transform 0.9s var(--ease)}
+.coll-card.big .coll-img img{aspect-ratio:unset;height:100%}
+.coll-card:hover .coll-img img{transform:scale(1.07)}
+.coll-info{position:absolute;bottom:0;left:0;right:0;padding:3rem 1.8rem 1.8rem;background:linear-gradient(transparent,rgba(7,6,4,0.98))}
+.coll-brand{font-size:0.5rem;letter-spacing:0.38em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem}
+.coll-name{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:400}
+.coll-price{font-size:0.65rem;color:var(--text-muted);margin-top:0.3rem}
+.coll-cta{position:absolute;top:1rem;right:1rem;background:var(--gold);color:#070604;padding:0.45rem 0.9rem;font-size:0.5rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;opacity:0;transform:translateY(-6px);transition:all 0.35s var(--ease)}
+.coll-card:hover .coll-cta{opacity:1;transform:none}
+
+/* ─── BRANDS STRIP ───────────────────────────────────────── */
+.brands{padding:4rem 0;border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);overflow:hidden}
+.brands-t{display:flex;width:max-content;gap:5rem;align-items:center;animation:brandS 32s linear infinite}
+.b-name{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;letter-spacing:0.14em;color:rgba(244,240,232,0.18);white-space:nowrap;transition:color 0.3s}
+.b-name:hover{color:var(--gold)}
+.b-dot{color:rgba(201,168,76,0.25);font-size:0.6rem}
+@keyframes brandS{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ─── PRODUCTS ───────────────────────────────────────────── */
+.filter-row{display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:5rem}
+.fp{padding:0.5rem 1.3rem;border:0.5px solid rgba(201,168,76,0.18);background:none;color:var(--text-muted);font-size:0.54rem;letter-spacing:0.22em;text-transform:uppercase;cursor:none;transition:all 0.3s;font-family:'Montserrat',sans-serif}
+.fp:hover,.fp.on{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,0.05)}
+.p-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5rem}
+.pc{cursor:pointer;position:relative}
+.pc-img{position:relative;overflow:hidden;aspect-ratio:2/3;background:var(--surface)}
+.pc-img img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform 0.9s var(--ease)}
+.pc:hover .pc-img img{transform:scale(1.07)}
+.pc-bdg{position:absolute;top:1rem;left:1rem;padding:0.3rem 0.7rem;font-size:0.47rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;z-index:2}
+.bdg-ex{background:var(--gold);color:#070604}
+.bdg-nw{background:var(--white);color:#070604}
+.bdg-sl{background:#b03030;color:#fff}
+.pc-wish{position:absolute;top:1rem;right:1rem;width:34px;height:34px;border:0.5px solid rgba(201,168,76,0.2);background:rgba(7,6,4,0.65);display:flex;align-items:center;justify-content:center;cursor:none;transition:all 0.3s;z-index:2;opacity:0;transform:translateY(-4px)}
+.pc:hover .pc-wish{opacity:1;transform:none}
+.pc-wish:hover{border-color:var(--gold)}
+.pc-wish.on svg{fill:var(--gold);stroke:var(--gold)}
+.pc-qv{position:absolute;bottom:0;left:0;right:0;padding:0.8rem;text-align:center;font-size:0.52rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);background:rgba(7,6,4,0.88);border-top:0.5px solid rgba(201,168,76,0.2);opacity:0;transform:translateY(100%);transition:all 0.4s var(--ease);z-index:2}
+.pc:hover .pc-qv{opacity:1;transform:none}
+.pc-body{padding:1.3rem 0 0}
+.pc-brand{font-size:0.48rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold);margin-bottom:0.3rem}
+.pc-name{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:400;margin-bottom:0.15rem}
+.pc-sub{font-size:0.58rem;color:var(--text-muted);margin-bottom:0.9rem;letter-spacing:0.04em}
+.pc-pr-row{display:flex;align-items:baseline;justify-content:space-between}
+.pc-price{font-size:0.88rem;color:var(--gold)}
+.pc-orig{font-size:0.68rem;color:rgba(244,240,232,0.22);text-decoration:line-through;margin-left:0.5rem}
+.pc-add{padding:0.42rem 0.85rem;background:none;border:0.5px solid rgba(201,168,76,0.25);color:var(--gold);font-size:0.5rem;letter-spacing:0.18em;text-transform:uppercase;cursor:none;transition:all 0.25s;font-family:'Montserrat',sans-serif}
+.pc-add:hover{background:var(--gold);color:#070604;border-color:var(--gold)}
+
+/* ─── SHOWCASE ───────────────────────────────────────────── */
+#showcase{padding:0;overflow:hidden}
+.showcase-full{display:grid;grid-template-columns:55% 45%;min-height:90vh;align-items:stretch}
+/* 3D SUIT CANVAS WRAP */
+.sc-wrap{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 38%,#1e1b12 0%,#0a0805 65%,#070604 100%);min-height:90vh}
+#sc-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* scanlines overlay */
+.sc-wrap::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 3px);pointer-events:none;z-index:2}
+/* corner brackets */
+.sc-wrap::after{content:'';position:absolute;inset:0;background:none;pointer-events:none;z-index:2;
+  box-shadow:inset 30px 30px 0 -28px rgba(201,168,76,0.5),inset -30px 30px 0 -28px rgba(201,168,76,0.5),inset 30px -30px 0 -28px rgba(201,168,76,0.5),inset -30px -30px 0 -28px rgba(201,168,76,0.5)}
+/* HUD chips */
+.hud-chip{position:absolute;font-size:0.44rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);background:rgba(7,6,4,0.65);border:0.5px solid rgba(201,168,76,0.3);padding:0.45rem 0.8rem;backdrop-filter:blur(6px);z-index:3;white-space:nowrap}
+.hud-tl{top:1.8rem;left:1.8rem}
+.hud-tr{top:1.8rem;right:1.8rem}
+.hud-bl{bottom:1.8rem;left:1.8rem}
+.hud-br{bottom:1.8rem;right:1.8rem}
+.hud-center-line{position:absolute;left:50%;top:10%;bottom:10%;width:1px;background:linear-gradient(to bottom,transparent,rgba(201,168,76,0.15),transparent);pointer-events:none;z-index:2}
+.showcase-txt{display:flex;flex-direction:column;justify-content:center;padding:7rem 6rem;background:var(--surface)}
+.showcase-txt .sl{margin-bottom:1rem}
+.showcase-txt .st{margin-bottom:2.5rem}
+.showcase-desc{font-size:0.78rem;line-height:2.3;color:var(--text-muted);margin-bottom:3rem;max-width:400px}
+.feat-list{list-style:none;margin-bottom:3.5rem}
+.feat-list li{padding:0.85rem 0;border-bottom:0.5px solid var(--border);font-size:0.7rem;letter-spacing:0.06em;color:var(--text-mid);display:flex;align-items:center;gap:1.2rem}
+.feat-list li::before{content:'';width:18px;height:1px;background:var(--gold);flex-shrink:0}
+
+/* ─── STATS ──────────────────────────────────────────────── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border)}
+.s-box{padding:5rem 2rem;text-align:center;border-right:0.5px solid var(--border);transition:background 0.4s}
+.s-box:last-child{border-right:none}
+.s-box:hover{background:rgba(201,168,76,0.04)}
+.s-n{font-family:'Cormorant Garamond',serif;font-size:5rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:0.6rem}
+.s-l{font-size:0.52rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--text-muted)}
+
+/* ─── STORE BANNER ───────────────────────────────────────── */
+.store-banner{position:relative;height:580px;overflow:hidden}
+.store-banner img{width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(0.32) sepia(12%) contrast(1.05)}
+.sb-cnt{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:0}
+.sb-cnt .sl{display:block;margin-bottom:1.5rem}
+.sb-cnt h2{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,7vw,6rem);font-weight:300;line-height:1;margin-bottom:0.3rem}
+.sb-cnt h2 em{font-style:italic;color:var(--gold)}
+.sb-cnt p{font-size:0.6rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--text-muted);margin:1.5rem 0 2.5rem}
+
+/* ─── LOOKBOOK ───────────────────────────────────────────── */
+.lb-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:5rem}
+.lb-item{position:relative;overflow:hidden;cursor:pointer}
+.lb-item:nth-child(2){margin-top:3rem}
+.lb-item:nth-child(4){margin-top:-3rem}
+.lb-img{aspect-ratio:2/3;overflow:hidden}
+.lb-img img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform 0.9s var(--ease)}
+.lb-item:hover .lb-img img{transform:scale(1.06)}
+.lb-over{position:absolute;inset:0;background:rgba(7,6,4,0);display:flex;align-items:flex-end;padding:1.5rem;transition:background 0.4s}
+.lb-item:hover .lb-over{background:rgba(7,6,4,0.6)}
+.lb-lbl{font-family:'Cormorant Garamond',serif;font-size:1.15rem;opacity:0;transform:translateY(10px);transition:all 0.4s var(--ease);color:var(--white)}
+.lb-item:hover .lb-lbl{opacity:1;transform:none}
+
+/* ─── TESTIMONIALS ───────────────────────────────────────── */
+.t-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:5rem}
+.t-card{padding:3rem 2.5rem;border:0.5px solid var(--border);transition:border-color 0.4s,background 0.4s;position:relative}
+.t-card::before{content:'\201C';font-family:'Cormorant Garamond',serif;font-size:6rem;color:var(--gold);opacity:0.15;position:absolute;top:1rem;left:2rem;line-height:1}
+.t-card:hover{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.03)}
+.t-stars{display:flex;gap:0.25rem;margin-bottom:1.8rem;position:relative;z-index:1}
+.t-star{color:var(--gold);font-size:0.7rem}
+.t-q{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-style:italic;line-height:1.85;color:rgba(244,240,232,0.82);margin-bottom:2.2rem;position:relative;z-index:1}
+.t-auth{display:flex;align-items:center;gap:1rem}
+.t-av{width:42px;height:42px;border-radius:50%;background:rgba(201,168,76,0.12);border:0.5px solid rgba(201,168,76,0.25);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);flex-shrink:0}
+.t-nm{font-size:0.68rem;letter-spacing:0.08em;color:var(--text-mid)}
+.t-role{font-size:0.54rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(201,168,76,0.5);margin-top:0.2rem}
+
+/* ─── NEWSLETTER ─────────────────────────────────────────── */
+.nl{text-align:center;border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);background:radial-gradient(ellipse at center,rgba(201,168,76,0.04) 0%,transparent 70%)}
+.nl .st{margin:0.5rem auto 1.2rem;max-width:600px}
+.nl-p{font-size:0.72rem;line-height:2;color:var(--text-muted);max-width:440px;margin:0 auto 3rem}
+.nl-form{display:flex;max-width:460px;margin:0 auto}
+.nl-in{flex:1;padding:1rem 1.5rem;background:transparent;border:0.5px solid rgba(201,168,76,0.2);border-right:none;color:var(--white);font-size:0.68rem;font-family:'Montserrat',sans-serif;outline:none;transition:border-color 0.3s}
+.nl-in:focus{border-color:var(--gold)}
+.nl-in::placeholder{color:var(--text-muted);font-size:0.65rem;letter-spacing:0.1em}
+.nl-btn{padding:1rem 1.8rem;background:var(--gold);color:#070604;border:none;font-size:0.58rem;letter-spacing:0.28em;text-transform:uppercase;font-weight:500;cursor:none;transition:background 0.3s;font-family:'Montserrat',sans-serif;white-space:nowrap}
+.nl-btn:hover{background:var(--gold2)}
+
+/* ─── LOCATION ───────────────────────────────────────────── */
+.loc-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:6rem;align-items:center}
+.loc-info .st{margin-bottom:2.5rem}
+.addr-blk{margin-bottom:2.5rem}
+.a-lbl{font-size:0.5rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem}
+.a-txt{font-size:0.82rem;line-height:2.3;color:var(--text-muted)}
+.c-links{display:flex;flex-direction:column;margin-top:3rem}
+.c-lnk{display:flex;align-items:center;gap:1rem;color:var(--text-muted);text-decoration:none;font-size:0.7rem;letter-spacing:0.1em;transition:color 0.3s;padding:0.9rem 0;border-bottom:0.5px solid var(--border)}
+.c-lnk:hover{color:var(--gold)}
+.c-ico{width:36px;height:36px;border:0.5px solid rgba(201,168,76,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color 0.3s}
+.c-lnk:hover .c-ico{border-color:var(--gold)}
+.map-w{position:relative;border:0.5px solid rgba(201,168,76,0.18)}
+.map-w iframe{width:100%;height:500px;border:none;filter:grayscale(100%) invert(88%) contrast(0.85);opacity:0.75}
+.map-tag{position:absolute;bottom:1.5rem;left:1.5rem;background:rgba(7,6,4,0.92);border:0.5px solid rgba(201,168,76,0.3);padding:0.85rem 1.2rem;backdrop-filter:blur(12px)}
+.map-tag p{font-size:0.56rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold)}
+.map-tag span{font-size:0.68rem;color:var(--text-muted)}
+
+/* ─── FOOTER ─────────────────────────────────────────────── */
+footer{padding:6rem 6rem 3rem;display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:3rem}
+.f-logo{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;letter-spacing:0.45em;margin-bottom:1.2rem;color:var(--white)}
+.f-tag{font-size:0.6rem;letter-spacing:0.12em;color:rgba(244,240,232,0.28);line-height:2.2}
+.f-soc{display:flex;gap:0.8rem;margin-top:2rem}
+.f-si{width:34px;height:34px;border:0.5px solid rgba(201,168,76,0.18);display:flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.3s}
+.f-si:hover{border-color:var(--gold);background:rgba(201,168,76,0.07)}
+.f-hl{font-size:0.5rem;letter-spacing:0.38em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem}
+.f-ul{list-style:none}
+.f-ul li{margin-bottom:0.9rem}
+.f-ul a{font-size:0.62rem;letter-spacing:0.1em;color:rgba(244,240,232,0.3);text-decoration:none;text-transform:uppercase;transition:color 0.3s}
+.f-ul a:hover{color:var(--gold)}
+.f-bot{grid-column:1/-1;border-top:0.5px solid var(--border);padding-top:2.5rem;margin-top:1rem;display:flex;justify-content:space-between;align-items:center}
+.f-bot p{font-size:0.54rem;letter-spacing:0.15em;color:rgba(244,240,232,0.18);text-transform:uppercase}
+
+/* ─── WHATSAPP FLOAT ──────────────────────────────────────── */
+.wa{position:fixed;bottom:2.5rem;right:2.5rem;z-index:200;width:56px;height:56px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 4px 24px rgba(37,211,102,0.38);animation:wap 2.5s infinite;transition:transform 0.3s}
+.wa:hover{transform:scale(1.1)}
+@keyframes wap{0%,100%{box-shadow:0 4px 24px rgba(37,211,102,0.38)}50%{box-shadow:0 4px 44px rgba(37,211,102,0.65)}}
+
+/* ─── RESPONSIVE ──────────────────────────────────────────── */
+@media(max-width:1200px){
+  .p-grid{grid-template-columns:repeat(2,1fr)}
+  footer{grid-template-columns:1fr 1fr;gap:2.5rem}
+  .f-bot{grid-column:1/-1}
+}
+@media(max-width:960px){
+  nav{padding:1.2rem 2.5rem}
+  nav.scrolled{padding:1rem 2.5rem}
+  .nav-center{display:none}
+  .hbg{display:flex}
+  .sec,.sec-sm{padding-left:2.5rem;padding-right:2.5rem}
+  .hero-wrap{padding:0 2.5rem}
+  .hero-scroll{right:2.5rem}
+  .showcase-full{grid-template-columns:1fr;min-height:auto}
+  .sc-wrap{height:70vw;min-height:380px}
+  .showcase-txt{padding:5rem 2.5rem}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .s-box:nth-child(2){border-right:none}
+  .s-box:nth-child(3){border-top:0.5px solid var(--border)}
+  .t-grid{grid-template-columns:1fr;max-width:560px;margin-left:auto;margin-right:auto}
+  .loc-grid{grid-template-columns:1fr;gap:3.5rem}
+  footer{grid-template-columns:1fr 1fr;padding:4rem 2.5rem 2rem}
+  .coll-grid{grid-template-columns:1fr 1fr}
+  .coll-card.big{grid-row:span 1}
+}
+@media(max-width:640px){
+  .coll-grid{grid-template-columns:1fr}
+  .p-grid{grid-template-columns:1fr 1fr;gap:1.2rem}
+  .lb-grid{grid-template-columns:repeat(2,1fr)}
+  .lb-item:nth-child(2){margin-top:0}
+  .lb-item:nth-child(4){margin-top:0}
+  #cart{width:100%;max-width:100%}
+  .qv-box{grid-template-columns:1fr}
+  .qv-img{height:55vw;min-height:260px}
+  footer{grid-template-columns:1fr}
+  .nl-form{flex-direction:column}
+  .nl-in{border-right:0.5px solid rgba(201,168,76,0.2);border-bottom:none}
+  .s-n{font-size:3.5rem}
+  .store-banner{height:440px}
+}
+/* ─── TOUCH DEVICE — hide custom cursor ─────────────────────── */
+@media(hover:none),(pointer:coarse){
+  #cur,#cur-ring{display:none!important}
+  body{cursor:auto!important}
+  a,button,.fp,.sz,.pc,.coll-card,.lb-item,.cart-ico,.hbg,.cart-x,
+  .qv-cls,.qv-add,.qv-wish,.q-btn,.c-rm,.wa-order,.nl-btn,.pc-add,
+  .pc-wish,.pc-qv{cursor:pointer!important}
+}
+/* ─── OVERFLOW LOCK ─────────────────────────────────────────── */
+html{overflow-x:hidden}
+/* ─── SMALL PHONES (< 480px) ────────────────────────────────── */
+@media(max-width:480px){
+  nav{padding:0.85rem 1.4rem}
+  nav.scrolled{padding:0.7rem 1.4rem}
+  .nav-wa{display:none}
+  .hero-wrap{padding:0 1.4rem}
+  .hero-h1 .line1,.hero-h1 .line2{font-size:clamp(3rem,17vw,5rem)}
+  .hero-btns{flex-direction:column;align-items:flex-start;gap:0.75rem}
+  .hero-btns a{width:100%;max-width:290px;text-align:center;padding:0.9rem 1.5rem}
+  .hero-scroll{right:1.4rem;bottom:1.8rem}
+  .sec{padding:4.5rem 1.4rem}
+  .sec-sm{padding:3.5rem 1.4rem}
+  .sh{flex-direction:column;gap:1.2rem;margin-bottom:3rem}
+  .st{font-size:clamp(2.2rem,10vw,3.2rem)}
+  .p-grid{grid-template-columns:1fr;gap:1.8rem}
+  .filter-row{gap:0.35rem;margin-bottom:3rem}
+  .fp{padding:0.38rem 0.85rem;font-size:0.5rem}
+  .sc-wrap{height:88vw;min-height:280px}
+  .showcase-txt{padding:2.8rem 1.4rem}
+  .s-n{font-size:2.4rem}
+  .s-box{padding:3rem 0.8rem}
+  .lb-grid{grid-template-columns:1fr 1fr}
+  .lb-item:nth-child(2){margin-top:0}
+  .lb-item:nth-child(4){margin-top:0}
+  .store-banner{height:340px}
+  .sb-cnt h2{font-size:clamp(2.2rem,9vw,3rem)}
+  .t-card{padding:2rem 1.4rem}
+  .nl-p{font-size:0.62rem}
+  .loc-grid{gap:2rem}
+  .map-w iframe{height:340px}
+  footer{padding:3rem 1.4rem 1.5rem;gap:1.8rem}
+  .f-bot{flex-direction:column;gap:0.6rem;align-items:center;text-align:center}
+  #toasts{right:0.8rem;left:0.8rem;top:0.8rem}
+  .toast{font-size:0.6rem;padding:0.75rem 1rem}
+  .qv-panel{padding:1.8rem 1.4rem}
+  .qv-name{font-size:1.7rem}
+  .cart-hd{padding:1.4rem 1.4rem 1.1rem}
+  .cart-body{padding:1.1rem 1.4rem}
+  .cart-ft{padding:1.1rem 1.4rem 1.6rem}
+  .coll-grid{grid-template-columns:1fr}
+}
+/* ─── VERY SMALL (< 375px) ──────────────────────────────────── */
+@media(max-width:375px){
+  .hero-h1 .line1,.hero-h1 .line2{font-size:2.8rem}
+  .hero-btns a{max-width:100%}
+  .s-box{padding:2.5rem 0.6rem}
+  .s-n{font-size:2rem}
+}
+/* ─── TABLET / LANDSCAPE PHONE FIX ──────────────────────────── */
+@media(min-width:641px) and (max-width:960px){
+  .p-grid{grid-template-columns:repeat(2,1fr)}
+  .s-box{padding:4rem 1.5rem}
+  .t-grid{grid-template-columns:1fr}
+  .loc-grid{gap:3rem}
+  .showcase-full{gap:0}
+}
+/* ─── SAFE CANVAS SIZING ─────────────────────────────────────── */
+canvas{display:block;max-width:100%}
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="pre-wordmark">BARNERS</div>
+  <div class="pre-line"></div>
+  <div class="pre-sub">Premium Fashion · Ankara</div>
+</div>
+
+<div id="prog"></div>
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div id="toasts"></div>
+
+<!-- CART VEIL -->
+<div class="cart-veil" id="cart-veil" onclick="closeCart()"></div>
+
+<!-- CART SIDEBAR -->
+<div id="cart">
+  <div class="cart-hd">
+    <h3>Your Selection</h3>
+    <button class="cart-x" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cart-body"></div>
+  <div class="cart-ft">
+    <div class="cart-tot">
+      <span>Subtotal</span>
+      <span id="cart-tot-val">₺0</span>
+    </div>
+    <button class="wa-order" onclick="waOrder()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Order via WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- QUICK VIEW -->
+<div id="qv">
+  <div class="qv-bg" onclick="closeQV()"></div>
+  <div class="qv-box" id="qv-box"></div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mob-menu">
+  <a href="#collections" onclick="closeMob()">Collections</a>
+  <a href="#products" onclick="closeMob()">Shop</a>
+  <a href="#lookbook" onclick="closeMob()">Lookbook</a>
+  <a href="#location" onclick="closeMob()">Visit Us</a>
+  <a href="https://wa.me/903124911323" style="color:var(--gold)">WhatsApp</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">BARNERS</a>
+  <ul class="nav-center">
+    <li><a href="#collections">Collections</a></li>
+    <li><a href="#products">Shop</a></li>
+    <li><a href="#lookbook">Lookbook</a></li>
+    <li><a href="#location">Visit Us</a></li>
+  </ul>
+  <div class="nav-r">
+    <a href="https://wa.me/903124911323" class="nav-wa" target="_blank">WhatsApp</a>
+    <button class="cart-ico" onclick="openCart()">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="cart-badge" id="cart-badge">0</span>
+    </button>
+    <button class="hbg" id="hbg" onclick="toggleMob()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <img id="hero-img"
+    src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=1920&q=90&auto=format&fit=crop&crop=top"
+    alt="Premium Fashion"
+    onerror="this.src='https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=1920&q=90&auto=format&fit=crop&crop=top'"/>
+  <canvas id="three-canvas"></canvas>
+  <div class="hero-wrap">
+    <p class="hero-eyebrow">Dünyaca Ünlü Markalar · Panora AVM Ankara</p>
+    <h1 class="hero-h1">
+      <span class="line1">BARNERS</span>
+      <span class="line2">Fashion</span>
+    </h1>
+    <div class="hero-rule"></div>
+    <p class="hero-sub">Premium Collections · Exclusive Brands<br>New Season 2025</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-g">Shop Collection</a>
+      <a href="#lookbook" class="btn-o">View Lookbook</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-tick"></div>
+    <span class="scroll-lbl">Scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-t">
+    <span class="ticker-i">New Season 2025</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">Paoloni</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">Premium Fashion</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">Ankara · Panora AVM</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">Exclusive Designs</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">World-Class Brands</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">70% Sale Now On</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">New Season 2025</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">Paoloni</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">Premium Fashion</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">Ankara · Panora AVM</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">Exclusive Designs</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">World-Class Brands</span><span class="ticker-i ticker-s">✦</span>
+    <span class="ticker-i">70% Sale Now On</span><span class="ticker-i ticker-s">✦</span>
+  </div>
+</div>
+
+<!-- COLLECTIONS -->
+<section class="sec reveal" id="collections">
+  <div class="sh">
+    <div><p class="sl">Curated for you</p><h2 class="st">New Season<br><em>Collections</em></h2></div>
+    <a href="#products" class="see">View All</a>
+  </div>
+  <div class="coll-grid">
+    <div class="coll-card big" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+      <div class="coll-img">
+        <img src="https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=900&q=90&auto=format&fit=crop&crop=top"
+          alt="Premium Suits" onerror="this.src='https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900&q=90&auto=format&fit=crop&crop=top'"/>
+      </div>
+      <div class="coll-info">
+        <p class="coll-brand">Paoloni · Tailored</p>
+        <p class="coll-name">Premium Suits</p>
+        <p class="coll-price">Starting ₺12,500</p>
+      </div>
+      <div class="coll-cta">Shop Now</div>
+    </div>
+    <div class="coll-card" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+      <div class="coll-img">
+        <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=700&q=90&auto=format&fit=crop&crop=top"
+          alt="Luxury Coats" onerror="this.src='https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=700&q=90&auto=format&fit=crop&crop=top'"/>
+      </div>
+      <div class="coll-info">
+        <p class="coll-brand">New Season</p>
+        <p class="coll-name">Luxury Coats</p>
+        <p class="coll-price">From ₺8,900</p>
+      </div>
+      <div class="coll-cta">Shop Now</div>
+    </div>
+    <div class="coll-card" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+      <div class="coll-img">
+        <img src="https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=700&q=90&auto=format&fit=crop"
+          alt="Designer Footwear" onerror="this.src='https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700&q=90&auto=format&fit=crop'"/>
+      </div>
+      <div class="coll-info">
+        <p class="coll-brand">Premium</p>
+        <p class="coll-name">Designer Footwear</p>
+        <p class="coll-price">From ₺4,500</p>
+      </div>
+      <div class="coll-cta">Shop Now</div>
+    </div>
+    <div class="coll-card" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
+      <div class="coll-img">
+        <img src="https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700&q=90&auto=format&fit=crop"
+          alt="Leather Goods" onerror="this.src='https://images.unsplash.com/photo-1594938298603-c8148c4b8b9f?w=700&q=90&auto=format&fit=crop'"/>
+      </div>
+      <div class="coll-info">
+        <p class="coll-brand">Accessories</p>
+        <p class="coll-name">Leather Goods</p>
+        <p class="coll-price">From ₺3,200</p>
+      </div>
+      <div class="coll-cta">Shop Now</div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<div class="brands reveal">
+  <div class="brands-t">
+    <span class="b-name">Paoloni</span><span class="b-dot">✦</span>
+    <span class="b-name">Ermenegildo Zegna</span><span class="b-dot">✦</span>
+    <span class="b-name">Canali</span><span class="b-dot">✦</span>
+    <span class="b-name">Corneliani</span><span class="b-dot">✦</span>
+    <span class="b-name">Brunello Cucinelli</span><span class="b-dot">✦</span>
+    <span class="b-name">Kiton</span><span class="b-dot">✦</span>
+    <span class="b-name">Loro Piana</span><span class="b-dot">✦</span>
+    <span class="b-name">Tom Ford</span><span class="b-dot">✦</span>
+    <span class="b-name">Paoloni</span><span class="b-dot">✦</span>
+    <span class="b-name">Ermenegildo Zegna</span><span class="b-dot">✦</span>
+    <span class="b-name">Canali</span><span class="b-dot">✦</span>
+    <span class="b-name">Corneliani</span><span class="b-dot">✦</span>
+    <span class="b-name">Brunello Cucinelli</span><span class="b-dot">✦</span>
+    <span class="b-name">Kiton</span><span class="b-dot">✦</span>
+    <span class="b-name">Loro Piana</span><span class="b-dot">✦</span>
+    <span class="b-name">Tom Ford</span><span class="b-dot">✦</span>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="sec reveal" id="products">
+  <div class="sh">
+    <div><p class="sl">Shop Now</p><h2 class="st">The <em>Collection</em></h2></div>
+  </div>
+  <div class="filter-row" id="filters">
+    <button class="fp on" data-f="all">All Pieces</button>
+    <button class="fp" data-f="suits">Suits</button>
+    <button class="fp" data-f="coats">Coats</button>
+    <button class="fp" data-f="footwear">Footwear</button>
+    <button class="fp" data-f="accessories">Accessories</button>
+  </div>
+  <div class="p-grid" id="pgrid"></div>
+</section>
+
+<!-- SHOWCASE -->
+<section id="showcase" class="reveal">
+  <div class="showcase-full">
+    <div class="sc-wrap">
+  <video src="suit.mp4" autoplay loop muted playsinline
+    style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;">
+  </video>
+  <!-- HUD overlays -->
+  <div class="hud-chip hud-tl">PAOLONI · ITALY</div>
+  <div class="hud-chip hud-tr">SUPER 150s WOOL</div>
+  <div class="hud-chip hud-bl">EST. 2015 · ANKARA</div>
+  <div class="hud-chip hud-br">MADE TO MEASURE</div>
+  <div class="hud-center-line"></div>
+</div>
+    <div class="showcase-txt">
+      <p class="sl">Featured Collection</p>
+      <h2 class="st">Tailored to<br><em>Perfection</em></h2>
+      <p class="showcase-desc">Every piece is sourced directly from the world's finest fashion houses. We bring European craftsmanship to Ankara — exclusively at Panora AVM. Each suit says everything before you say a word.</p>
+      <ul class="feat-list">
+        <li>Paoloni exclusive tailoring</li>
+        <li>100% premium natural fabrics</li>
+        <li>Made-to-measure available</li>
+        <li>Personal styling consultation</li>
+        <li>International brand expertise</li>
+      </ul>
+      <a href="https://wa.me/903124911323" class="btn-g" target="_blank">Book a Fitting →</a>
+    </div>
+  </div>
+</section>
+
+<!-- STORE BANNER -->
+<div class="store-banner">
+  <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1920&q=85&auto=format&fit=crop" alt="Store Interior"
+    onerror="this.style.background='#0c0a06';this.style.display='block'"/>
+  <div class="sb-cnt">
+    <span class="sl">Panora AVM · Ankara</span>
+    <h2>Experience Fashion<br><em>In Person</em></h2>
+    <p>Open Daily · 10:00 – 22:00</p>
+    <a href="https://wa.me/903124911323" class="btn-g" target="_blank">Book a Visit →</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row reveal">
+  <div class="s-box"><div class="s-n" data-t="50">0</div><div class="s-l">Global Brands</div></div>
+  <div class="s-box"><div class="s-n" data-t="13">0</div><div class="s-l">Thousand Followers</div></div>
+  <div class="s-box"><div class="s-n" data-t="5">0</div><div class="s-l">Thousand Products</div></div>
+  <div class="s-box"><div class="s-n" data-t="10">0</div><div class="s-l">Years of Excellence</div></div>
+</div>
+
+<!-- LOOKBOOK -->
+<section class="sec reveal" id="lookbook">
+  <div class="sh">
+    <div><p class="sl">Style Inspiration</p><h2 class="st">2025 <em>Lookbook</em></h2></div>
+    <a href="https://www.instagram.com/barnersturkiye" class="see" target="_blank">Full Lookbook</a>
+  </div>
+  <div class="lb-grid">
+    <div class="lb-item">
+      <div class="lb-img"><img src="https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=600&q=90&auto=format&fit=crop&crop=top" alt="Look 01" onerror="this.src='https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=90&auto=format&fit=crop&crop=top'"/></div>
+      <div class="lb-over"><p class="lb-lbl">Look 01 — Business</p></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-img"><img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=600&q=90&auto=format&fit=crop&crop=top" alt="Look 02" onerror="this.src='https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=600&q=90&auto=format&fit=crop&crop=top'"/></div>
+      <div class="lb-over"><p class="lb-lbl">Look 02 — Casual Luxe</p></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-img"><img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=600&q=90&auto=format&fit=crop&crop=top" alt="Look 03" onerror="this.src='https://images.unsplash.com/photo-1594938298603-c8148c4b8b9f?w=600&q=90&auto=format&fit=crop&crop=top'"/></div>
+      <div class="lb-over"><p class="lb-lbl">Look 03 — Evening</p></div>
+    </div>
+    <div class="lb-item">
+      <div class="lb-img"><img src="https://images.unsplash.com/photo-1563630423918-b58f07336ac9?w=600&q=90&auto=format&fit=crop&crop=top" alt="Look 04" onerror="this.src='https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=600&q=90&auto=format&fit=crop&crop=top'"/></div>
+      <div class="lb-over"><p class="lb-lbl">Look 04 — Weekend</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="sec reveal" style="padding-top:0">
+  <div class="sh">
+    <div><p class="sl">Client Stories</p><h2 class="st">What They <em>Say</em></h2></div>
+  </div>
+  <div class="t-grid">
+    <div class="t-card">
+      <div class="t-stars"><span class="t-star">★</span><span class="t-star">★</span><span class="t-star">★</span><span class="t-star">★</span><span class="t-star">★</span></div>
+      <p class="t-q">"The Paoloni suit exceeded every expectation. The craftsmanship is extraordinary — I receive compliments every time I wear it. BARNERS is in a league of its own in Ankara."</p>
+      <div class="t-auth"><div class="t-av">A</div><div><div class="t-nm">Ahmet K.</div><div class="t-role">Ankara · CEO</div></div></div>
+    </div>
+    <div class="t-card">
+      <div class="t-stars"><span class="t-star">★</span><span class="t-star">★</span><span class="t-star">★</span><span class="t-star">★</span><span class="t-star">★</span></div>
+      <p class="t-q">"I flew from Istanbul specifically to visit BARNERS. The personal styling service is world-class, and the selection of European brands is unmatched anywhere in Turkey."</p>
+      <div class="t-auth"><div class="t-av">M</div><div><div class="t-nm">Mehmet S.</div><div class="t-role">Istanbul · Entrepreneur</div></div></div>
+    </div>
+    <div class="t-card">
+      <div class="t-stars"><span class="t-star">★</span><span class="t-star">★</span><span class="t-star">★</span><span class="t-star">★</span><span class="t-star">★</span></div>
+      <p class="t-q">"The made-to-measure service at BARNERS transformed my wardrobe entirely. The team's knowledge of European fashion is genuinely impressive. Five stars without hesitation."</p>
+      <div class="t-auth"><div class="t-av">E</div><div><div class="t-nm">Emre D.</div><div class="t-role">Ankara · Diplomat</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="nl sec-sm reveal">
+  <p class="sl" style="display:block;margin-bottom:1rem">Stay in the know</p>
+  <h2 class="st">Exclusive <em>Access</em></h2>
+  <p class="nl-p">Join our inner circle. Be first to discover new arrivals, private sales, and invitation-only events.</p>
+  <form class="nl-form" onsubmit="handleNL(event)">
+    <input type="email" class="nl-in" placeholder="Your email address" required/>
+    <button type="submit" class="nl-btn">Subscribe</button>
+  </form>
+</div>
+
+<!-- LOCATION -->
+<section class="sec reveal" id="location">
+  <div class="loc-grid">
+    <div class="loc-info">
+      <p class="sl">Where to find us</p>
+      <h2 class="st">Visit Our<br><em>Flagship Store</em></h2>
+      <div class="addr-blk">
+        <p class="a-lbl">Address</p>
+        <p class="a-txt">Panora Alışveriş ve Yaşam Merkezi<br>Turan Güneş Blv. D:182/176<br>Oran, Çankaya · Ankara, Türkiye</p>
+      </div>
+      <div class="addr-blk">
+        <p class="a-lbl">Opening Hours</p>
+        <p class="a-txt">Monday – Sunday<br>10:00 AM – 10:00 PM</p>
+      </div>
+      <div class="c-links">
+        <a href="tel:+903124911323" class="c-lnk">
+          <div class="c-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63 19.79 19.79 0 01.01 1 2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg></div>
+          +90 312 491 13 23
+        </a>
+        <a href="https://wa.me/903124911323" class="c-lnk" target="_blank">
+          <div class="c-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="#c9a84c"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></div>
+          WhatsApp Us
+        </a>
+        <a href="https://www.instagram.com/barnersturkiye" class="c-lnk" target="_blank">
+          <div class="c-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c9a84c" stroke="none"/></svg></div>
+          @barnersturkiye
+        </a>
+        <a href="https://barners.com.tr" class="c-lnk" target="_blank">
+          <div class="c-ico"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+          barners.com.tr
+        </a>
+      </div>
+    </div>
+    <div class="map-w">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3059.8!2d32.8312!3d39.9032!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14d34f6d7c8b0001%3A0x1234567890abcdef!2sPanora%20Al%C4%B1%C5%9Fveri%C5%9F%20Merkezi!5e0!3m2!1sen!2str!4v1234567890" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="map-tag"><p>BARNERS</p><span>Panora AVM, Çankaya · Ankara</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="f-logo">BARNERS</div>
+    <p class="f-tag">Dünyaca Ünlü Markalar<br>& Özel Tasarımlar<br>Panora AVM · Ankara</p>
+    <div class="f-soc">
+      <a href="https://www.instagram.com/barnersturkiye" class="f-si" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c9a84c" stroke="none"/></svg></a>
+      <a href="https://wa.me/903124911323" class="f-si" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="#c9a84c"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+    </div>
+  </div>
+  <div>
+    <p class="f-hl">Navigation</p>
+    <ul class="f-ul">
+      <li><a href="#collections">Collections</a></li>
+      <li><a href="#products">Shop</a></li>
+      <li><a href="#lookbook">Lookbook</a></li>
+      <li><a href="#location">Visit Us</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="f-hl">Services</p>
+    <ul class="f-ul">
+      <li><a href="https://wa.me/903124911323">Personal Styling</a></li>
+      <li><a href="https://wa.me/903124911323">Made to Measure</a></li>
+      <li><a href="https://wa.me/903124911323">Gift Wrapping</a></li>
+      <li><a href="https://wa.me/903124911323">Alterations</a></li>
+    </ul>
+  </div>
+  <div>
+    <p class="f-hl">Contact</p>
+    <ul class="f-ul">
+      <li><a href="tel:+903124911323">+90 312 491 13 23</a></li>
+      <li><a href="https://wa.me/903124911323">WhatsApp</a></li>
+      <li><a href="https://instagram.com/barnersturkiye">Instagram</a></li>
+      <li><a href="https://barners.com.tr">barners.com.tr</a></li>
+    </ul>
+  </div>
+  <div class="f-bot">
+    <p>© 2025 Barners · All Rights Reserved</p>
+    <p>Panora AVM · Çankaya · Ankara · Türkiye</p>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<a href="https://wa.me/903124911323" class="wa" target="_blank" aria-label="WhatsApp">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+/* ── PRODUCTS ──────────────────────────────────────────────── */
+const PRODS = [
+  {id:1,name:'The Monaco',sub:'Navy Slim Suit',price:18500,badge:'EXCLUSIVE',cat:'suits',
+   sizes:['46','48','50','52','54'],
+   img:'https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=700&q=90&auto=format&fit=crop&crop=top',
+   desc:'Impeccably tailored in the finest Italian navy wool by Paoloni. Hand-stitched lapels, mother-of-pearl buttons, fully canvassed construction. A masterpiece of contemporary elegance.'},
+  {id:2,name:'The Milano',sub:'Charcoal Business Suit',price:15900,badge:'NEW',cat:'suits',
+   sizes:['46','48','50','52','54','56'],
+   img:'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=700&q=90&auto=format&fit=crop&crop=top',
+   desc:'The quintessential power suit. Charcoal grey virgin wool with chalk-stripe detailing and hand-finished lapels. Confidence, embodied.'},
+  {id:3,name:'The Vienna',sub:'Camel Wool Overcoat',price:12400,badge:null,cat:'coats',
+   sizes:['S','M','L','XL','XXL'],
+   img:'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=700&q=90&auto=format&fit=crop&crop=top',
+   desc:'A sculptural camel overcoat in pure merino wool. Structured shoulders, satin lining, horn buttons. The season\'s most coveted outerwear.'},
+  {id:4,name:'The Roma',sub:'Herringbone Blazer',price:9800,origPrice:14000,badge:'SALE',cat:'suits',
+   sizes:['46','48','50','52'],
+   img:'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=700&q=90&auto=format&fit=crop&crop=top',
+   desc:'Classic British herringbone weave with Italian craftsmanship. A blazer that transcends seasons and elevates any wardrobe.'},
+  {id:5,name:'The Venezia',sub:'Oxford Leather Derby',price:6200,badge:'NEW',cat:'footwear',
+   sizes:['40','41','42','43','44','45'],
+   img:'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?w=700&q=90&auto=format&fit=crop',
+   desc:'Handcrafted Venetian full-grain leather with Goodyear welt construction. Polished to mirror finish. Built to last a lifetime.'},
+  {id:6,name:'The Napoli',sub:'Premium Leather Belt',price:3200,badge:null,cat:'accessories',
+   sizes:['85cm','90cm','95cm','100cm','105cm'],
+   img:'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700&q=90&auto=format&fit=crop',
+   desc:'Full-grain Italian leather with solid brass buckle. Ages beautifully, developing a rich patina that is entirely your own.'},
+  {id:7,name:'The Firenze',sub:'Slim Tailored Suit',price:16800,badge:'EXCLUSIVE',cat:'suits',
+   sizes:['46','48','50','52','54'],
+   img:'https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?w=700&q=90&auto=format&fit=crop&crop=center',
+   desc:'The slim silhouette refined to perfection. Super 150s wool, bespoke construction. The statement piece every wardrobe demands.'},
+  {id:8,name:'The Turin',sub:'Smart Casual Jacket',price:8900,badge:null,cat:'coats',
+   sizes:['S','M','L','XL'],
+   img:'https://images.unsplash.com/photo-1563630423918-b58f07336ac9?w=700&q=90&auto=format&fit=crop&crop=top',
+   desc:'The art of looking effortlessly polished. Premium cotton-linen blend, unstructured silhouette. Luxury that breathes.'},
+];
+
+/* ── CART STATE ────────────────────────────────────────────── */
+let cart = JSON.parse(localStorage.getItem('b_cart')||'[]');
+let wish = JSON.parse(localStorage.getItem('b_wish')||'[]');
+let qvSize = null;
+let qvId = null;
+
+const saveCart = () => localStorage.setItem('b_cart', JSON.stringify(cart));
+const saveWish = () => localStorage.setItem('b_wish', JSON.stringify(wish));
+
+function updateBadge(){
+  const n = cart.reduce((s,i)=>s+i.qty,0);
+  const b = document.getElementById('cart-badge');
+  b.textContent = n;
+  b.classList.toggle('on', n > 0);
+}
+
+function renderCart(){
+  const body = document.getElementById('cart-body');
+  const totEl = document.getElementById('cart-tot-val');
+  if(!cart.length){
+    body.innerHTML='<div class="cart-empty-msg">Your selection is empty</div>';
+    totEl.textContent='₺0'; return;
+  }
+  const tot = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  totEl.textContent = '₺'+tot.toLocaleString('tr-TR');
+  body.innerHTML = cart.map((it,i)=>`
+    <div class="c-item">
+      <img class="c-item-img" src="${it.img}" alt="${it.name}" onerror="this.style.background='#1a1610'"/>
+      <div class="c-info">
+        <div class="c-name">${it.name}</div>
+        <div class="c-sub">${it.sub}</div>
+        <div class="c-size">Size: ${it.size}</div>
+        <div class="c-row">
+          <div class="qty">
+            <button class="q-btn" onclick="chQty(${i},-1)">−</button>
+            <span class="q-n">${it.qty}</span>
+            <button class="q-btn" onclick="chQty(${i},1)">+</button>
+          </div>
+          <span class="c-price">₺${(it.price*it.qty).toLocaleString('tr-TR')}</span>
+        </div>
+        <button class="c-rm" onclick="rmCart(${i})">Remove</button>
+      </div>
+    </div>`).join('');
+}
+
+function addToCart(id, size, silent){
+  const p = PRODS.find(x=>x.id===id);
+  const s = size||p.sizes[0];
+  const ex = cart.find(x=>x.id===id&&x.size===s);
+  if(ex) ex.qty++; else cart.push({id:p.id,name:p.name,sub:p.sub,price:p.price,size:s,qty:1,img:p.img});
+  saveCart(); updateBadge(); renderCart();
+  toast('Added — '+p.name);
+  if(!silent){ closeQV(); openCart(); }
+}
+
+function chQty(i,d){ cart[i].qty+=d; if(cart[i].qty<=0) cart.splice(i,1); saveCart(); updateBadge(); renderCart(); }
+function rmCart(i){ cart.splice(i,1); saveCart(); updateBadge(); renderCart(); }
+function openCart(){ document.getElementById('cart').classList.add('on'); document.getElementById('cart-veil').classList.add('on'); renderCart(); }
+function closeCart(){ document.getElementById('cart').classList.remove('on'); document.getElementById('cart-veil').classList.remove('on'); }
+
+function waOrder(){
+  if(!cart.length){ toast('Your selection is empty'); return; }
+  const lines = cart.map(i=>`• ${i.name} (${i.sub}) — Size ${i.size} x${i.qty} — ₺${(i.price*i.qty).toLocaleString('tr-TR')}`).join('\n');
+  const tot = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const msg = `Merhaba! BARNERS'den sipariş vermek istiyorum:\n\n${lines}\n\nToplam: ₺${tot.toLocaleString('tr-TR')}\n\nLütfen stok durumunu onaylayın.`;
+  window.open('https://wa.me/903124911323?text='+encodeURIComponent(msg),'_blank');
+}
+
+/* ── QUICK VIEW ────────────────────────────────────────────── */
+function openQV(id){
+  const p = PRODS.find(x=>x.id===id);
+  qvId=id; qvSize=p.sizes[0];
+  const bdgCls = p.badge==='EXCLUSIVE'?'bdg-ex qv-bdg':p.badge==='NEW'?'bdg-nw qv-bdg':p.badge==='SALE'?'bdg-sl qv-bdg':'';
+  const bdgH = p.badge?`<div class="${bdgCls}">${p.badge}</div>`:'';
+  const orH = p.origPrice?`<span class="qv-orig">₺${p.origPrice.toLocaleString('tr-TR')}</span>`:'';
+  const isW = wish.includes(id);
+  document.getElementById('qv-box').innerHTML=`
+    <div class="qv-img">
+      ${bdgH}
+      <img src="${p.img}" alt="${p.name}" onerror="this.style.background='#1a1610'"/>
+    </div>
+    <div class="qv-panel">
+      <button class="qv-cls" onclick="closeQV()">✕</button>
+      <div class="qv-brand">BARNERS · ${p.cat.toUpperCase()}</div>
+      <div class="qv-name">${p.name}</div>
+      <div class="qv-subtitle">${p.sub}</div>
+      <div class="qv-price-row"><span class="qv-price">₺${p.price.toLocaleString('tr-TR')}</span>${orH}</div>
+      <div class="qv-sep"></div>
+      <div class="qv-desc">${p.desc}</div>
+      <div>
+        <div class="size-hd">Select Size</div>
+        <div class="sizes">${p.sizes.map((s,i)=>`<button class="sz ${i===0?'on':''}" onclick="pickSz(this,'${s}')">${s}</button>`).join('')}</div>
+      </div>
+      <div class="qv-acts">
+        <button class="qv-add" onclick="addToCart(${id},qvSize,false)">Add to Selection</button>
+        <button class="qv-wish ${isW?'on':''}" onclick="togWish(${id},this)" aria-label="Wishlist">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="${isW?'#c9a84c':'none'}" stroke="${isW?'#c9a84c':'currentColor'}" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+      </div>
+    </div>`;
+  document.getElementById('qv').classList.add('on');
+}
+function pickSz(btn,s){ qvSize=s; document.querySelectorAll('.sz').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); }
+function closeQV(){ document.getElementById('qv').classList.remove('on'); }
+
+function togWish(id,btn){
+  const i=wish.indexOf(id);
+  if(i===-1){ wish.push(id); btn.classList.add('on'); btn.querySelector('svg').setAttribute('fill','#c9a84c'); btn.querySelector('svg').setAttribute('stroke','#c9a84c'); toast('Added to wishlist'); }
+  else { wish.splice(i,1); btn.classList.remove('on'); btn.querySelector('svg').setAttribute('fill','none'); btn.querySelector('svg').setAttribute('stroke','currentColor'); }
+  saveWish();
+}
+
+/* ── PRODUCTS GRID ─────────────────────────────────────────── */
+function renderProds(f){
+  const list = f==='all'?PRODS:PRODS.filter(p=>p.cat===f);
+  document.getElementById('pgrid').innerHTML = list.map(p=>{
+    const bdgH = p.badge?`<div class="pc-bdg bdg-${p.badge.toLowerCase()}">${p.badge}</div>`:'';
+    const orH = p.origPrice?`<span class="pc-orig">₺${p.origPrice.toLocaleString('tr-TR')}</span>`:'';
+    const isW = wish.includes(p.id);
+    return `<div class="pc">
+      <div class="pc-img" onclick="openQV(${p.id})">
+        ${bdgH}
+        <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.parentElement.style.background='#131109'"/>
+        <button class="pc-wish ${isW?'on':''}" onclick="event.stopPropagation();togWishGrid(${p.id},this)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="${isW?'#c9a84c':'none'}" stroke="${isW?'#c9a84c':'currentColor'}" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </button>
+        <div class="pc-qv" onclick="openQV(${p.id})">Quick View</div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-brand">BARNERS · ${p.cat}</div>
+        <div class="pc-name">${p.name}</div>
+        <div class="pc-sub">${p.sub}</div>
+        <div class="pc-pr-row">
+          <div><span class="pc-price">₺${p.price.toLocaleString('tr-TR')}</span>${orH}</div>
+          <button class="pc-add" onclick="addToCart(${p.id},null,true);openCart()">Add</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togWishGrid(id,btn){
+  const i=wish.indexOf(id);
+  if(i===-1){ wish.push(id); btn.classList.add('on'); btn.querySelector('svg').setAttribute('fill','#c9a84c'); btn.querySelector('svg').setAttribute('stroke','#c9a84c'); toast('Added to wishlist'); }
+  else { wish.splice(i,1); btn.classList.remove('on'); btn.querySelector('svg').setAttribute('fill','none'); btn.querySelector('svg').setAttribute('stroke','currentColor'); }
+  saveWish();
+}
+
+document.getElementById('filters').addEventListener('click',e=>{
+  if(!e.target.classList.contains('fp')) return;
+  document.querySelectorAll('.fp').forEach(b=>b.classList.remove('on'));
+  e.target.classList.add('on');
+  renderProds(e.target.dataset.f);
+});
+
+/* ── TOAST ──────────────────────────────────────────────────── */
+function toast(msg){
+  const c=document.getElementById('toasts');
+  const el=document.createElement('div');
+  el.className='toast';
+  el.innerHTML=`<div class="t-dot"></div><span>${msg}</span>`;
+  c.appendChild(el);
+  setTimeout(()=>{ el.classList.add('out'); setTimeout(()=>el.remove(),350); },2600);
+}
+
+/* ── NEWSLETTER ─────────────────────────────────────────────── */
+function handleNL(e){
+  e.preventDefault();
+  const btn=e.target.querySelector('.nl-btn');
+  btn.textContent='Thank You ✓';
+  e.target.querySelector('.nl-in').value='';
+  toast('Welcome to the BARNERS inner circle');
+  setTimeout(()=>btn.textContent='Subscribe',3500);
+}
+
+/* ── MOBILE MENU ─────────────────────────────────────────────── */
+function toggleMob(){ document.getElementById('mob-menu').classList.toggle('on'); }
+function closeMob(){ document.getElementById('mob-menu').classList.remove('on'); }
+
+/* ── CURSOR ──────────────────────────────────────────────────── */
+const curEl=document.getElementById('cur');
+const ringEl=document.getElementById('cur-ring');
+let cx=0,cy=0;
+document.addEventListener('mousemove',e=>{ cx=e.clientX; cy=e.clientY; curEl.style.left=cx+'px'; curEl.style.top=cy+'px'; });
+setInterval(()=>{ ringEl.style.left=cx+'px'; ringEl.style.top=cy+'px'; },50);
+document.addEventListener('mouseover',e=>{
+  document.body.classList.toggle('hovering',!!e.target.closest('a,button,[onclick]'));
+});
+
+/* ── NAV SCROLL ──────────────────────────────────────────────── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
+  const p=(window.scrollY/(document.body.scrollHeight-window.innerHeight))*100;
+  document.getElementById('prog').style.width=p+'%';
+});
+
+/* ── REVEAL ──────────────────────────────────────────────────── */
+const revObs=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }),{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+
+/* ── COUNTERS ────────────────────────────────────────────────── */
+const cntObs=new IntersectionObserver(es=>es.forEach(e=>{
+  if(!e.isIntersecting) return;
+  const el=e.target; const t=parseInt(el.dataset.t); let c=0;
+  const step=t/60;
+  const timer=setInterval(()=>{ c+=step; if(c>=t){c=t;clearInterval(timer);} el.textContent=Math.floor(c)+'+'; },22);
+  cntObs.unobserve(el);
+}),{threshold:0.5});
+document.querySelectorAll('.s-n[data-t]').forEach(el=>cntObs.observe(el));
+
+/* ── HERO THREE.JS ───────────────────────────────────────────── */
+(function(){
+  const canvas=document.getElementById('three-canvas');
+  const R=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  R.setPixelRatio(Math.min(devicePixelRatio,2));
+  R.setSize(canvas.offsetWidth,canvas.offsetHeight);
+  R.setClearColor(0,0);
+  const S=new THREE.Scene();
+  const C=new THREE.PerspectiveCamera(60,canvas.offsetWidth/canvas.offsetHeight,.1,100);
+  C.position.z=12;
+  S.add(new THREE.AmbientLight(0xc9a84c,.25));
+  const d=new THREE.DirectionalLight(0xc9a84c,1); d.position.set(5,8,5); S.add(d);
+  const d2=new THREE.DirectionalLight(0xe8d48b,.4); d2.position.set(-5,-3,3); S.add(d2);
+  const gM=new THREE.MeshStandardMaterial({color:0xc9a84c,metalness:.9,roughness:.15});
+  const wM=new THREE.MeshStandardMaterial({color:0xc9a84c,wireframe:true,opacity:.3,transparent:true});
+  const obs=[];
+  for(let i=0;i<5;i++){
+    const m=new THREE.Mesh(new THREE.TorusGeometry(1.1+i*.35,.05,14,80),i%2?wM:new THREE.MeshStandardMaterial({color:0xc9a84c,metalness:.9,roughness:.1,opacity:.18,transparent:true}));
+    m.position.set((Math.random()-.5)*16,(Math.random()-.5)*11,(Math.random()-.5)*4-2);
+    m.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,Math.random()*Math.PI);
+    m.userData={rx:(Math.random()-.5)*.007,ry:(Math.random()-.5)*.011,fs:.3+Math.random()*.5,fa:.4+Math.random()*.7,sy:m.position.y,ph:Math.random()*Math.PI*2};
+    S.add(m); obs.push(m);
+  }
+  for(let i=0;i<7;i++){
+    const s=.18+Math.random()*.45;
+    const m=new THREE.Mesh(new THREE.BoxGeometry(s,s*3,s*.3),new THREE.MeshStandardMaterial({color:i%3?0x1a1508:0xc9a84c,metalness:.5,roughness:.5,opacity:.45+Math.random()*.35,transparent:true}));
+    m.position.set((Math.random()-.5)*18,(Math.random()-.5)*12,(Math.random()-.5)*3-3);
+    m.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,Math.random()*Math.PI);
+    m.userData={rx:(Math.random()-.5)*.004,ry:(Math.random()-.5)*.007,rz:(Math.random()-.5)*.003,fs:.2+Math.random()*.4,fa:.3+Math.random()*.8,sy:m.position.y,ph:Math.random()*Math.PI*2};
+    S.add(m); obs.push(m);
+  }
+  for(let i=0;i<14;i++){
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.05+Math.random()*.1,12,12),gM);
+    m.position.set((Math.random()-.5)*20,(Math.random()-.5)*13,(Math.random()-.5)*3);
+    m.userData={ry:.01,fs:.5+Math.random(),fa:.15+Math.random()*.5,sy:m.position.y,ph:Math.random()*Math.PI*2};
+    S.add(m); obs.push(m);
+  }
+  const ws=new THREE.Mesh(new THREE.IcosahedronGeometry(2.8,1),new THREE.MeshStandardMaterial({color:0xc9a84c,wireframe:true,opacity:.05,transparent:true}));
+  ws.position.z=-3; S.add(ws);
+  const pp=[]; for(let i=0;i<400;i++) pp.push((Math.random()-.5)*32,(Math.random()-.5)*22,(Math.random()-.5)*12-6);
+  const pg=new THREE.BufferGeometry(); pg.setAttribute('position',new THREE.Float32BufferAttribute(pp,3));
+  S.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0xc9a84c,size:.035,opacity:.4,transparent:true})));
+  let mx=0,my=0;
+  document.addEventListener('mousemove',e=>{ mx=(e.clientX/innerWidth-.5)*2; my=(e.clientY/innerHeight-.5)*2; });
+  let t=0;
+  (function loop(){ requestAnimationFrame(loop); t+=.01;
+    obs.forEach(o=>{ const d=o.userData; o.rotation.x+=d.rx||0; o.rotation.y+=d.ry||0; o.rotation.z+=d.rz||0; o.position.y=d.sy+Math.sin(t*d.fs+d.ph)*d.fa; });
+    ws.rotation.x+=.0018; ws.rotation.y+=.0025;
+    C.position.x+=(mx*1.4-C.position.x)*.04; C.position.y+=(-my*.9-C.position.y)*.04;
+    C.lookAt(0,0,0); R.render(S,C);
+  })();
+  window.addEventListener('resize',()=>{ R.setSize(canvas.offsetWidth,canvas.offsetHeight); C.aspect=canvas.offsetWidth/canvas.offsetHeight; C.updateProjectionMatrix(); });
+})();
+
+/* ── PRELOADER ───────────────────────────────────────────────── */
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('preloader').classList.add('out'),1900));
+
+/* ── INIT ────────────────────────────────────────────────────── */
+renderProds('all');
+updateBadge();
+
+/* ── SHOWCASE 3D BOW-TIE SUIT MANNEQUIN ─────────────────────── */
+(function(){
+  const canvas = document.getElementById('sc-canvas');
+  if(!canvas) return;
+
+  const R = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  R.setPixelRatio(Math.min(devicePixelRatio, 2));
+  R.shadowMap.enabled = true;
+  R.shadowMap.type = THREE.PCFSoftShadowMap;
+  R.toneMapping = THREE.ACESFilmicToneMapping;
+  R.toneMappingExposure = 1.45;
+
+  const S = new THREE.Scene();
+  S.fog = new THREE.FogExp2(0x070604, 0.034);
+
+  const CAM = new THREE.PerspectiveCamera(40, 1, 0.1, 60);
+  CAM.position.set(0, 1.0, 6.2);
+
+  // ── MATERIALS ──
+  const suitM  = new THREE.MeshStandardMaterial({color:0x100f0e, roughness:0.88, metalness:0.04});
+  const lapelM = new THREE.MeshStandardMaterial({color:0x1e1b18, roughness:0.14, metalness:0.10, side:THREE.DoubleSide});
+  const shirtM = new THREE.MeshStandardMaterial({color:0xf8f5ed, roughness:0.80, metalness:0.0});
+  const bowM   = new THREE.MeshStandardMaterial({color:0x0b0a09, roughness:0.11, metalness:0.09});
+  const goldM  = new THREE.MeshStandardMaterial({color:0xc9a84c, metalness:0.93, roughness:0.09});
+  const mannM  = new THREE.MeshStandardMaterial({color:0x1e1c1a, roughness:0.60, metalness:0.06});
+  const standM = new THREE.MeshStandardMaterial({color:0x2e2b27, roughness:0.32, metalness:0.32});
+  const cuffM  = new THREE.MeshStandardMaterial({color:0xf0ede5, roughness:0.76, metalness:0.0});
+  const shoeM  = new THREE.MeshStandardMaterial({color:0x070605, metalness:0.20, roughness:0.06});
+
+  // ── LIGHTING — fashion studio three-point ──
+  S.add(new THREE.AmbientLight(0xfff8e8, 0.18));
+
+  const key = new THREE.DirectionalLight(0xfff5e0, 3.2);
+  key.position.set(3.5, 9, 5.5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.camera.near = 0.5; key.shadow.camera.far = 22;
+  key.shadow.camera.left = -5; key.shadow.camera.right = 5;
+  key.shadow.camera.top = 7; key.shadow.camera.bottom = -5;
+  S.add(key);
+
+  const fill = new THREE.DirectionalLight(0xc8d8ff, 0.58);
+  fill.position.set(-5, 3, 3); S.add(fill);
+
+  const rim = new THREE.DirectionalLight(0xc9a84c, 2.8);
+  rim.position.set(0, 7, -7); S.add(rim);
+
+  const bounce = new THREE.PointLight(0xffe0a0, 0.42, 10);
+  bounce.position.set(0, -5, 3); S.add(bounce);
+
+  const spot = new THREE.SpotLight(0xffeedd, 1.0, 18, Math.PI / 5, 0.45);
+  spot.position.set(-2.5, 6, 4.5); S.add(spot);
+
+  // ── GROUP ──
+  const G = new THREE.Group();
+  S.add(G);
+
+  function M(geo, mat){
+    const m = new THREE.Mesh(geo, mat);
+    m.castShadow = true; m.receiveShadow = true; return m;
+  }
+
+  // ── HEAD — smooth featureless mannequin oval ──
+  const head = M(new THREE.SphereGeometry(0.265, 32, 24), mannM);
+  head.scale.set(0.87, 1.02, 0.80);
+  head.position.set(0, 2.00, 0);
+  G.add(head);
+
+  // ── NECK ──
+  const neck = M(new THREE.CylinderGeometry(0.098, 0.128, 0.30, 32), mannM);
+  neck.position.set(0, 1.78, 0);
+  G.add(neck);
+
+  // ── JACKET BODY — LatheGeometry 80 segments (zero faceting) ──
+  const bPts = [
+    new THREE.Vector2(0.000,  1.62),
+    new THREE.Vector2(0.132,  1.60),
+    new THREE.Vector2(0.178,  1.56),
+    new THREE.Vector2(0.305,  1.48),
+    new THREE.Vector2(0.488,  1.36),
+    new THREE.Vector2(0.568,  1.20),
+    new THREE.Vector2(0.595,  0.97),
+    new THREE.Vector2(0.572,  0.74),
+    new THREE.Vector2(0.532,  0.52),
+    new THREE.Vector2(0.472,  0.30),
+    new THREE.Vector2(0.412,  0.08),
+    new THREE.Vector2(0.406, -0.12),
+    new THREE.Vector2(0.432, -0.34),
+    new THREE.Vector2(0.458, -0.55),
+    new THREE.Vector2(0.444, -0.74),
+    new THREE.Vector2(0.420, -0.90),
+    new THREE.Vector2(0.000, -0.95),
+  ];
+  G.add(M(new THREE.LatheGeometry(bPts, 80), suitM));
+
+  // ── SHOULDER CAPS ──
+  [-1, 1].forEach(s => {
+    const sh = M(new THREE.SphereGeometry(0.152, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.55), suitM);
+    sh.scale.set(1.58, 0.68, 1.10);
+    sh.position.set(s * 0.620, 1.38, 0);
+    sh.rotation.z = s * 0.20;
+    G.add(sh);
+  });
+
+  // ── ARMS — CatmullRom tube ──
+  [-1, 1].forEach(s => {
+    const crv = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(s * 0.58,  1.40,  0.00),
+      new THREE.Vector3(s * 0.70,  1.17,  0.04),
+      new THREE.Vector3(s * 0.76,  0.84,  0.04),
+      new THREE.Vector3(s * 0.72,  0.48,  0.02),
+      new THREE.Vector3(s * 0.66,  0.12,  0.00),
+      new THREE.Vector3(s * 0.62, -0.20, -0.01),
+      new THREE.Vector3(s * 0.58, -0.52, -0.02),
+    ]);
+    G.add(M(new THREE.TubeGeometry(crv, 28, 0.146, 32, false), suitM));
+
+    const cuff = M(new THREE.CylinderGeometry(0.104, 0.110, 0.158, 32), cuffM);
+    cuff.position.set(s * 0.58, -0.60, 0);
+    G.add(cuff);
+
+    const cl = M(new THREE.CylinderGeometry(0.024, 0.024, 0.033, 12), goldM);
+    cl.rotation.x = Math.PI / 2;
+    cl.position.set(s * 0.58, -0.60, 0.110);
+    G.add(cl);
+  });
+
+  // ── SHIRT FRONT — white V between lapels ──
+  {
+    const sfSh = new THREE.Shape();
+    sfSh.moveTo(-0.100,  0.00);
+    sfSh.lineTo(-0.118,  0.46);
+    sfSh.lineTo(-0.080,  0.94);
+    sfSh.lineTo(-0.040,  1.26);
+    sfSh.lineTo( 0.000,  1.40);
+    sfSh.lineTo( 0.040,  1.26);
+    sfSh.lineTo( 0.080,  0.94);
+    sfSh.lineTo( 0.118,  0.46);
+    sfSh.lineTo( 0.100,  0.00);
+    sfSh.closePath();
+    const sf = M(
+      new THREE.ExtrudeGeometry(sfSh, {depth:0.020, bevelEnabled:true, bevelThickness:0.006, bevelSize:0.005, bevelSegments:2}),
+      shirtM
+    );
+    sf.position.set(0, 0.16, 0.618);
+    G.add(sf);
+    [0.26, 0.56, 0.86].forEach(dy => {
+      const st = M(new THREE.CylinderGeometry(0.020, 0.020, 0.028, 12), goldM);
+      st.rotation.x = Math.PI / 2;
+      st.position.set(0, 0.16 + dy, 0.640);
+      G.add(st);
+    });
+  }
+
+  // ── SPREAD COLLAR ──
+  [-1, 1].forEach(s => {
+    const cSh = new THREE.Shape();
+    cSh.moveTo(0, 0);
+    cSh.lineTo(s * 0.155, 0.06);
+    cSh.lineTo(s * 0.235, 0.21);
+    cSh.lineTo(s * 0.080, 0.27);
+    cSh.lineTo(s * 0.020, 0.10);
+    cSh.closePath();
+    const col = M(
+      new THREE.ExtrudeGeometry(cSh, {depth:0.023, bevelEnabled:true, bevelThickness:0.006, bevelSize:0.004, bevelSegments:2}),
+      shirtM
+    );
+    col.position.set(0, 1.555, 0.598);
+    G.add(col);
+  });
+
+  // ── PEAK LAPELS — satin sheen tuxedo ──
+  [-1, 1].forEach(s => {
+    const lSh = new THREE.Shape();
+    lSh.moveTo(0, 0);
+    lSh.quadraticCurveTo(s * 0.08, 0.20, s * 0.18, 0.44);
+    lSh.quadraticCurveTo(s * 0.44, 0.78, s * 0.46, 1.12);
+    lSh.lineTo(s * 0.32, 1.36);
+    lSh.lineTo(s * 0.14, 1.18);
+    lSh.quadraticCurveTo(s * 0.08, 0.84, s * 0.05, 0.54);
+    lSh.quadraticCurveTo(s * 0.02, 0.26, 0, 0);
+    lSh.closePath();
+    const lapel = M(
+      new THREE.ExtrudeGeometry(lSh, {depth:0.056, bevelEnabled:true, bevelThickness:0.016, bevelSize:0.010, bevelSegments:4}),
+      lapelM
+    );
+    lapel.position.set(0, 0.30, 0.632);
+    G.add(lapel);
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // ── BOW TIE — butterfly / continental style — MAIN FEATURE ──
+  // ════════════════════════════════════════════════════════════
+  {
+    const BY = 1.608; // y at collar
+    const BZ = 0.648; // z in front of shirt
+
+    // Two butterfly wings — left (s=-1) and right (s=1)
+    [-1, 1].forEach(s => {
+      const wSh = new THREE.Shape();
+      wSh.moveTo(0, 0);
+      // Top bezier: center → outer-top-corner
+      wSh.bezierCurveTo(
+        s * 0.042,  0.094,
+        s * 0.158,  0.088,
+        s * 0.292,  0.044
+      );
+      // Outer edge — two straight steps (the "wing tip")
+      wSh.lineTo(s * 0.308,  0.024);
+      wSh.lineTo(s * 0.308, -0.024);
+      wSh.lineTo(s * 0.292, -0.044);
+      // Bottom bezier: outer-bottom-corner → center
+      wSh.bezierCurveTo(
+        s * 0.158, -0.088,
+        s * 0.042, -0.094,
+        0, 0
+      );
+      wSh.closePath();
+      const wing = M(
+        new THREE.ExtrudeGeometry(wSh, {depth:0.046, bevelEnabled:true, bevelThickness:0.010, bevelSize:0.007, bevelSegments:4}),
+        bowM
+      );
+      wing.position.set(0, BY, BZ);
+      G.add(wing);
+    });
+
+    // Center knot — wraps the wing join
+    const knot = M(new THREE.BoxGeometry(0.074, 0.112, 0.060), bowM);
+    knot.position.set(0, BY, BZ + 0.022);
+    G.add(knot);
+
+    // Gold pin through center of knot
+    const pin = M(new THREE.CylinderGeometry(0.015, 0.015, 0.064, 12), goldM);
+    pin.rotation.z = Math.PI / 2;
+    pin.position.set(0, BY, BZ + 0.054);
+    G.add(pin);
+  }
+
+  // ── JACKET BUTTONS ──
+  [0.07, -0.28].forEach(dy => {
+    const btn = M(new THREE.CylinderGeometry(0.033, 0.033, 0.035, 16), goldM);
+    btn.rotation.x = Math.PI / 2;
+    btn.position.set(0, dy, 0.660);
+    G.add(btn);
+  });
+
+  // ── POCKET SQUARE — white with gold tip ──
+  const ps = M(new THREE.BoxGeometry(0.188, 0.128, 0.034), shirtM);
+  ps.position.set(-0.44, 1.06, 0.638);
+  ps.rotation.z = 0.13;
+  G.add(ps);
+  const psTip = M(new THREE.BoxGeometry(0.042, 0.055, 0.035), goldM);
+  psTip.position.set(-0.44, 1.13, 0.639);
+  psTip.rotation.z = 0.13;
+  G.add(psTip);
+
+  // ── TROUSER LEGS ──
+  [-1, 1].forEach(s => {
+    const leg = M(new THREE.CylinderGeometry(0.156, 0.136, 1.05, 64), suitM);
+    leg.position.set(s * 0.192, -1.47, 0);
+    G.add(leg);
+  });
+  const wb = M(new THREE.CylinderGeometry(0.388, 0.428, 0.148, 64), suitM);
+  wb.position.set(0, -0.972, 0);
+  G.add(wb);
+
+  // ── SHOES ──
+  [-1, 1].forEach(s => {
+    const shoe = M(new THREE.SphereGeometry(0.172, 32, 16), shoeM);
+    shoe.scale.set(1.24, 0.38, 2.18);
+    shoe.position.set(s * 0.192, -2.04, 0.052);
+    G.add(shoe);
+  });
+
+  // ── MANNEQUIN STAND ──
+  const post = M(new THREE.CylinderGeometry(0.027, 0.027, 1.52, 16), standM);
+  post.position.set(0, -1.66, 0);
+  G.add(post);
+  const base = M(new THREE.CylinderGeometry(0.50, 0.56, 0.040, 48), standM);
+  base.position.set(0, -2.43, 0);
+  G.add(base);
+
+  // ── GROUND GLOW RINGS ──
+  [[0.58, 1.08, 0.12], [0.27, 0.58, 0.07], [1.08, 1.65, 0.04]].forEach(([ri, ro, op]) => {
+    const ring = M(
+      new THREE.RingGeometry(ri, ro, 64),
+      new THREE.MeshStandardMaterial({color:0xc9a84c, metalness:0.6, roughness:0.4, side:THREE.DoubleSide, opacity:op, transparent:true})
+    );
+    ring.rotation.x = -Math.PI / 2;
+    ring.position.y = -2.45;
+    G.add(ring);
+  });
+
+  // ── GOLD PARTICLES ──
+  const pp = [];
+  for(let i = 0; i < 260; i++){
+    const r = 2.0 + Math.random() * 2.8;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = (Math.random() - 0.5) * Math.PI * 1.6;
+    pp.push(
+      r * Math.cos(theta) * Math.cos(phi),
+      r * Math.sin(phi) * 1.6 - 0.3,
+      r * Math.sin(theta) * Math.cos(phi)
+    );
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.Float32BufferAttribute(pp, 3));
+  const parts = new THREE.Points(pGeo, new THREE.PointsMaterial({color:0xc9a84c, size:0.027, opacity:0.48, transparent:true}));
+  S.add(parts);
+
+  G.position.y = 0.32;
+
+  // ── MOUSE PARALLAX ──
+  let tX = 0, tY = 0;
+  window.addEventListener('mousemove', e => {
+    tX = (e.clientX / innerWidth  - 0.5) * 0.9;
+    tY = (e.clientY / innerHeight - 0.5) * 0.5;
+  });
+
+  // ── RESIZE ──
+  function doResize(){
+    const w = canvas.clientWidth  || (canvas.parentElement && canvas.parentElement.clientWidth)  || 300;
+    const h = canvas.clientHeight || (canvas.parentElement && canvas.parentElement.clientHeight) || Math.round(window.innerHeight * 0.85);
+    if(w > 0 && h > 0){ R.setSize(w, h, false); CAM.aspect = w / h; CAM.updateProjectionMatrix(); }
+  }
+  requestAnimationFrame(() => requestAnimationFrame(doResize));
+  window.addEventListener('resize', doResize);
+
+  // ── ANIMATE ──
+  let ang = 0, t = 0, cX = 0, cY = 1.0;
+  (function loop(){
+    requestAnimationFrame(loop);
+    ang += 0.006;
+    t   += 0.012;
+    G.rotation.y = ang;
+    G.position.y = 0.32 + Math.sin(t * 0.5) * 0.052;
+    parts.rotation.y += 0.0009;
+    rim.intensity = 2.6 + Math.sin(t * 0.7) * 0.24;
+    cX += (tX * 0.55 - cX) * 0.04;
+    cY += (1.0  - tY * 0.4 - cY) * 0.04;
+    CAM.position.x = cX;
+    CAM.position.y = cY;
+    CAM.lookAt(0, 0.75, 0);
+    R.render(S, CAM);
+  })();
+})();
+</script>
+</body>
+</html>
